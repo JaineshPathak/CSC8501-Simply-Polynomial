@@ -53,10 +53,7 @@ int Term::getSign(const char* str)
 		str++;
 	}
 	else if (*str == '+')
-	{
-		n = 1;
 		str++;
-	}
 
 	return n;
 }
@@ -72,14 +69,4 @@ int Term::getNumberDigit(const char* str)
 	str = end;
 
 	return n;
-}
-
-void Term::tryParsing(const char* str)
-{
-	std::cout << std::endl;
-	while (*str)
-	{
-		m_coeff = parseCoefficient(str);
-		m_power = parseExponent(str);
-	}
 }

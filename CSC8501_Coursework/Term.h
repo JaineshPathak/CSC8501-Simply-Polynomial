@@ -14,7 +14,7 @@ public:
 	{
 	}
 
-	Term(int _c, int _v, int _p) : m_coeff(_c), m_power(_p)
+	Term(int _c, int _p) : m_coeff(_c), m_power(_p)
 	{
 	}
 
@@ -38,5 +38,6 @@ public:
 	int getPower();
 	int getCalculatedVal(int _v);
 
-	void tryParsing(const char* str);
+public:
+	Term* nextTerm;
 };

@@ -21,9 +21,15 @@
     <ClCompile Include="Term.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Poly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Term.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Poly.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
