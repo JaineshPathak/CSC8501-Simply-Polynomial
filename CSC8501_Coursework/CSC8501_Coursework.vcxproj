@@ -144,6 +144,7 @@
     <ClCompile Include="Term.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ParserUtils.h" />
     <ClInclude Include="Poly.h" />
     <ClInclude Include="Term.h" />
   </ItemGroup>

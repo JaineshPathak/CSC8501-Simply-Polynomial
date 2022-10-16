@@ -8,5 +8,5 @@ private:
 	std::vector<Term> m_termsList;
 
 public:
-	void AddTerm(const Term& T);
+	void addTerm(const Term& T);
 };

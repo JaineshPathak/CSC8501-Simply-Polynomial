@@ -9,12 +9,18 @@ private:
 	int m_coeff;
 	int m_power;
 
+	bool m_coeffIsConstant;
+
 public:
-	Term() : m_coeff(1), m_power(1)
+	Term() : m_coeff(1), m_power(1), m_coeffIsConstant(false)
 	{
 	}
 
-	Term(int _c, int _p) : m_coeff(_c), m_power(_p)
+	Term(int _c, int _p) : m_coeff(_c), m_power(_p), m_coeffIsConstant(false)
+	{
+	}
+
+	Term(int _c, int _p, bool _coeffIsConstant) : m_coeff(_c), m_power(_p), m_coeffIsConstant(_coeffIsConstant)
 	{
 	}
 
@@ -22,6 +28,8 @@ public:
 	{
 		m_coeff = term.m_coeff;
 		m_power = term.m_power;
+
+		m_coeffIsConstant = term.m_coeffIsConstant;
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const Term& T);
@@ -36,8 +44,6 @@ private:
 public:
 	int getCoeff();
 	int getPower();
+	bool isConstant();
 	int getCalculatedVal(int _v);
-
-public:
-	Term* nextTerm;
 };

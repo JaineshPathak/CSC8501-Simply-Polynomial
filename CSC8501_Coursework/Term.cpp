@@ -4,6 +4,8 @@ int Term::getCoeff() { return m_coeff; }
 
 int Term::getPower() { return m_power; }
 
+bool Term::isConstant() { return m_coeffIsConstant; }
+
 int Term::getCalculatedVal(int _v)
 {
 	if (m_power < 0)
@@ -14,7 +16,10 @@ int Term::getCalculatedVal(int _v)
 
 std::ostream& operator<<(std::ostream& os, const Term& T)
 {
-	os << T.m_coeff << "x" << "^" << T.m_power;
+	if(!T.m_coeffIsConstant)
+		os << T.m_coeff << "x" << "^" << T.m_power;
+	else
+		os << T.m_coeff;
 	return os;
 }
 

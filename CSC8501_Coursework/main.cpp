@@ -1,3 +1,4 @@
+#include "ParserUtils.h"
 #include "Poly.h"
 #include "Term.h"
 
@@ -76,54 +77,40 @@
 //	return term;
 //}
 
-//5x^3 - 3x^2 + 8x - 100
-void ParsePoly(const char* str, int str_size, Poly& poly)
+struct strIndex
 {
-	int i = 0;
-	bool coeffIsNeg = false;
-	//char* start = str;
-	while (*str)
+	const char* str;
+};
+
+void parsePoly(strIndex* strIndex, int str_size, Poly& poly);
+int checkSign(strIndex* strIndex);
+int checkExponent(strIndex* strIndex, bool& coeffIsConstant);
+
+//5x^3 - 3x^2 + 8x - 100
+void parsePoly(strIndex* strIndex, int str_size, Poly& poly)
+{
+	while (*strIndex->str)
 	{
-		int coeff = 1;
-		int power = 1;
-		char* end;
-		Term term;
+		int coeff = 1, power = 1;
+		bool coeffIsConstant = false;
 
-		if (*str == '-')
-		{
-			coeffIsNeg = true;
-			str++;
-		}
-		else if (*str == '+')
-		{
-			coeffIsNeg = false;
-			str++;
-		}
+		int sign = checkSign(strIndex);
+		ParserUtils::getNumberFromString(&strIndex->str, coeff);
+		coeff *= sign;
 
-		coeff = strtol(str, &end, 10);
-		if (str == end)	coeff = 1;
-		coeff *= coeffIsNeg ? -1 : 1;
-		str = end;
+		power = checkExponent(strIndex, coeffIsConstant);
 
-		if (*str == 'x')
-		{
-			str++;
-			if (*str == '^')
-			{
-				str++;
-				power = strtol(str, &end, 10);
-				if (str == end)	power = 1;
-				str = end;
-			}
-		}
-
-		term = Term(coeff, power);
-		poly.AddTerm(term);
+		Term term = Term(coeff, power, coeffIsConstant);
+		poly.addTerm(term);
 
 		std::cout << "Term: " << term;
 		std::cout << "\nCoeff: " << term.getCoeff();
 		std::cout << "\nPower: " << term.getPower();
+		std::cout << "\nConstant?: " << term.isConstant();
 		std::cout << std::endl << "\n";
+
+		if (coeffIsConstant)
+			break;
 	}
 #pragma region OLD
 #if 0
@@ -180,14 +167,39 @@ void ParsePoly(const char* str, int str_size, Poly& poly)
 #pragma endregion
 }
 
-//void ParsePoly(const char* str, Poly& poly)
-//{
-//	parser_ctx_t ctx;
-//	ctx.str = str;
-//
-//	while (*ctx.str)
-//		poly.termsList.push_back(GetTerm(&ctx));
-//}
+int checkSign(strIndex* strIndex)
+{
+	int sign = 1;
+
+	if (*strIndex->str == '-')
+	{
+		sign = -1;
+		strIndex->str++;
+	}
+	else if (*strIndex->str == '+')
+		strIndex->str++;
+
+	return sign;
+}
+
+int checkExponent(strIndex* strIndex, bool& coeffIsConstant)
+{
+	int power = 0;
+	if (*strIndex->str == 'x')
+	{
+		power = 1;
+		strIndex->str++;
+		if (*strIndex->str == '^')
+		{
+			strIndex->str++;
+			ParserUtils::getNumberFromString(&strIndex->str, power);
+		}
+	}
+	else
+		coeffIsConstant = true;
+
+	return power;
+}
 
 int main()
 {
@@ -201,6 +213,13 @@ int main()
 	std::cout << "\nYour Expression is: " << polyStr << std::endl;
 
 	Poly poly = Poly();
-	ParsePoly(polyStr.c_str(), polyStr.size(), poly);
+	strIndex strIndexer;
+	strIndexer.str = polyStr.c_str();
+
+	parsePoly(&strIndexer, polyStr.size(), poly);
+
+	int startNum = 0, lastNum = 0;
+	std::cout << "Enter First and Last Num: ";
+	std::cin >> startNum >> lastNum;
 	//ParsePoly(polyStr.c_str(), poly);
 }
