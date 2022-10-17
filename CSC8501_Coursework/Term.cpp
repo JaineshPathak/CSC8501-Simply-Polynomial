@@ -6,7 +6,7 @@ int Term::getPower() { return m_power; }
 
 bool Term::isConstant() { return m_coeffIsConstant; }
 
-int Term::getCalculatedVal(int _v)
+int Term::getCalculatedVal(int _v) const
 {
 	if (m_power < 0)
 		return 0;

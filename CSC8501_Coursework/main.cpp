@@ -1,6 +1,4 @@
-#include "ParserUtils.h"
-#include "Poly.h"
-#include "Term.h"
+#include "CmdInterface.h"
 
 //typedef struct parser_ctx_t 
 //{
@@ -77,149 +75,11 @@
 //	return term;
 //}
 
-struct strIndex
-{
-	const char* str;
-};
-
-void parsePoly(strIndex* strIndex, int str_size, Poly& poly);
-int checkSign(strIndex* strIndex);
-int checkExponent(strIndex* strIndex, bool& coeffIsConstant);
-
-//5x^3 - 3x^2 + 8x - 100
-void parsePoly(strIndex* strIndex, int str_size, Poly& poly)
-{
-	while (*strIndex->str)
-	{
-		int coeff = 1, power = 1;
-		bool coeffIsConstant = false;
-
-		int sign = checkSign(strIndex);
-		ParserUtils::getNumberFromString(&strIndex->str, coeff);
-		coeff *= sign;
-
-		power = checkExponent(strIndex, coeffIsConstant);
-
-		Term term = Term(coeff, power, coeffIsConstant);
-		poly.addTerm(term);
-
-		std::cout << "Term: " << term;
-		std::cout << "\nCoeff: " << term.getCoeff();
-		std::cout << "\nPower: " << term.getPower();
-		std::cout << "\nConstant?: " << term.isConstant();
-		std::cout << std::endl << "\n";
-
-		if (coeffIsConstant)
-			break;
-	}
-#pragma region OLD
-#if 0
-	while (0)
-	{
-		int coeff = 1;
-		int power = 1;
-		char* end;
-
-		Term term;
-
-		if (isdigit(str[i]) && str[i + 1] == 'x')
-		{
-			coeff = str[i] - '0';					//5
-			if (coeffIsNeg)
-				coeff *= -1;
-
-			i++;
-			if (str[i] == 'x')						//5x
-			{
-				i++;
-				if (str[i] == '^')					//5x^
-				{
-					i++;
-					if (isdigit(str[i]))
-						power = str[i] - '0';		//5x^3
-				}
-			}
-
-			term = Term(coeff, power);
-			poly.termsList.push_back(term);
-
-			std::cout << "Term: " << term;
-			std::cout << "\nCoeff: " << term.getCoeff();
-			std::cout << "\nPower: " << term.getPower();
-			std::cout << std::endl << "\n";
-		}  
-		if (str[i] == '-')
-		{
-			coeffIsNeg = true;
-			i++;
-		}
-		else if (str[i] == '+')
-		{
-			coeffIsNeg = false;
-			i++;
-		}
-		else
-			i++;
-
-		//coeff = std::strtol()
-	}
-#endif
-#pragma endregion
-}
-
-int checkSign(strIndex* strIndex)
-{
-	int sign = 1;
-
-	if (*strIndex->str == '-')
-	{
-		sign = -1;
-		strIndex->str++;
-	}
-	else if (*strIndex->str == '+')
-		strIndex->str++;
-
-	return sign;
-}
-
-int checkExponent(strIndex* strIndex, bool& coeffIsConstant)
-{
-	int power = 0;
-	if (*strIndex->str == 'x')
-	{
-		power = 1;
-		strIndex->str++;
-		if (*strIndex->str == '^')
-		{
-			strIndex->str++;
-			ParserUtils::getNumberFromString(&strIndex->str, power);
-		}
-	}
-	else
-		coeffIsConstant = true;
-
-	return power;
-}
-
 int main()
 {
-	std::cout << "Enter the Expression: ";
-	std::string polyStr("-5x^3 - 3x^2 + 8x - 100");
-	std::getline(std::cin, polyStr);
-	//cin >> polyStr;
+	CmdInterface cmdInterface = CmdInterface();
+	while (cmdInterface.isRunning())
+		cmdInterface.update();
 
-	polyStr.erase(remove_if(polyStr.begin(), polyStr.end(), isspace), polyStr.end());
-
-	std::cout << "\nYour Expression is: " << polyStr << std::endl;
-
-	Poly poly = Poly();
-	strIndex strIndexer;
-	strIndexer.str = polyStr.c_str();
-
-	parsePoly(&strIndexer, polyStr.size(), poly);
-
-	int startNum = 0, lastNum = 0;
-	std::cout << "Enter First and Last Num: ";
-	std::cin >> startNum >> lastNum;
-	//ParsePoly(polyStr.c_str(), poly);
+	return 0;
 }

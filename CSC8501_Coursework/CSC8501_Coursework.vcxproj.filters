@@ -24,6 +24,9 @@
     <ClCompile Include="Poly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CmdInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Term.h">
@@ -33,6 +36,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ParserUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

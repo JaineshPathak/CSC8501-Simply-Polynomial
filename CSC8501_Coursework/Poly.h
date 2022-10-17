@@ -9,4 +9,5 @@ private:
 
 public:
 	void addTerm(const Term& T);
+	void calculatePoly(const int &start, const int &end, std::vector<int>& v);
 };

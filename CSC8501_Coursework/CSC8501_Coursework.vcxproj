@@ -139,13 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CmdInterface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Poly.cpp" />
     <ClCompile Include="Term.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CmdInterface.h" />
     <ClInclude Include="ParserUtils.h" />
     <ClInclude Include="Poly.h" />
+    <ClInclude Include="Rules.h" />
     <ClInclude Include="Term.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

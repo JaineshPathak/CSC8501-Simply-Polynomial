@@ -45,5 +45,5 @@ public:
 	int getCoeff();
 	int getPower();
 	bool isConstant();
-	int getCalculatedVal(int _v);
+	int getCalculatedVal(int _v) const;
 };
