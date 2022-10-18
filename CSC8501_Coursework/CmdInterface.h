@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
-#include <cmath>
-#include <thread>
 #include <fstream>
+#include <sstream>
+#include <cmath>
 #include "Rules.h"
 #include "Poly.h"
 #include "ParserUtils.h"
@@ -31,11 +31,14 @@ private:
 	void askSaveFile(const std::vector<int>& outputSet);
 
 	void showMainMenu();
-	void enterExpression();
+	void processExpression();
 	void deriveExpression();
 
+	void readFile(bool withExpression = false);
 	void saveSetToFile(const std::string& fileName, const std::vector<int>& outputSet);
-	void readSetFromFile(std::string fileName);
+
+	void parseOutputSet(const std::vector<std::string>& outputLinesV);
+	void getOutputSet(const std::string& strSet);
 };
 
 void inputStringExpression(std::string& polyStr);

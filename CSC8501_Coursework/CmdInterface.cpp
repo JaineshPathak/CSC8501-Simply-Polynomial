@@ -2,6 +2,7 @@
 
 void inputStringExpression(std::string& polyStr)
 {
+	std::cout << "Enter Algebraic Expression, for example: 5x^3 + 2x^2 - x + 3\n";
 	std::cout << "Enter the Expression: ";
 	std::cin.ignore();
 	std::getline(std::cin, polyStr);
@@ -36,6 +37,35 @@ CmdInterface::~CmdInterface()
 {
 	m_state = -1;
 	m_isRunning = false;
+}
+
+bool CmdInterface::isRunning() const { return m_isRunning; }
+
+void CmdInterface::update()
+{
+	switch (m_state)
+	{
+	case 0:
+		showMainMenu();
+		break;
+	case 1:
+		processExpression();
+		break;
+	case 2:
+		readFile();
+		break;
+	case 3:
+		readFile(true);
+		break;
+	case 4:
+		m_isRunning = false;
+		break;
+
+	default:
+		std::cout << "Invalid number!" << std::endl;
+		askToContinue(0);
+		break;
+	}
 }
 
 //5x^3 - 3x^2 + 8x - 100
@@ -109,48 +139,25 @@ void CmdInterface::askToContinue(int toState)
 
 void CmdInterface::askSaveFile(const std::vector<int>& outputSet)
 {
-	std::cout << "\nSave the Output Set in a file? Enter Y/N\nYour Answer: ";
+	std::cout << "\n\nSave the Output Set in a file? Enter Y/N\nYour Answer: ";
 	std::cin.ignore();
 	char saveChar; std::cin >> saveChar;
 
-	std::string fileName;
+	std::string fileName("OutputSet.txt");
 	switch (saveChar)
 	{
 	case 'y':
-		std::cout << "\nEnter Filename: ";
+	case 'Y':
+		/*std::cout << "\nEnter Filename: ";
 		std::cin.ignore();
-		std::cin >> fileName;
+		std::cin >> fileName;*/
 		saveSetToFile(fileName, outputSet);
 		break;
 
 	case 'n':
+	case 'N':
 	default:
 		return;
-	}
-}
-
-bool CmdInterface::isRunning() const { return m_isRunning; }
-
-void CmdInterface::update()
-{
-	switch (m_state)
-	{
-	case 0:
-		showMainMenu();		
-		break;
-	case 1:		
-		enterExpression();
-		break;
-	case 2:
-		break;
-	case 3:
-		m_isRunning = false;
-		break;
-
-	default:
-		std::cout << "Invalid number!" << std::endl;
-		askToContinue(0);
-		break;
 	}
 }
 
@@ -158,19 +165,17 @@ void CmdInterface::showMainMenu()
 {
 	system("cls");
 	std::cout << "Enter Numbers to initiate commands: " << std::endl;
-	std::cout << "1. Enter Expression\n";
-	std::cout << "2. Derive Expression\n";
-	std::cout << "3. Exit\n";
+	std::cout << "1. Enter Expression and get Output Set\n";
+	std::cout << "2. Read file and get Output Set\n";
+	std::cout << "3. Read file and derive Expression\n";
+	std::cout << "4. Exit\n";
 
-	std::cout << "\nChoose: ";
-	std::cin >> m_state;
+	std::cout << "\nChoose: "; std::cin >> m_state;
 }
 
-//State = 1
-void CmdInterface::enterExpression()
+void CmdInterface::processExpression()
 {
 	system("cls");
-
 	std::string polyStr("");
 	inputStringExpression(polyStr);
 
@@ -180,7 +185,7 @@ void CmdInterface::enterExpression()
 	try { parsePoly(&strIndexer, polyStr.size(), poly); }
 	catch (const std::invalid_argument& e)
 	{
-		std::cout << "Exception occured: " << e.what();
+		std::cout << "\nException occured: " << e.what();
 		askToContinue(0);
 		return;
 	}
@@ -188,33 +193,80 @@ void CmdInterface::enterExpression()
 	int startNum = 0, finishNum = 0;
 	std::vector<int> outputSet;
 	inputRangeAndCalc(startNum, finishNum, poly, outputSet);
-
 	askSaveFile(outputSet);
+}
+
+void CmdInterface::readFile(bool withExpression)
+{
+	system("cls");
+	std::ifstream fileReader("OutputSet.txt", std::ios::in);
+	fileReader.exceptions(std::ifstream::badbit);
+	try
+	{
+		if (!fileReader.good())
+			throw std::ifstream("Probably file doesn't exists or badbit Error");
+
+		std::string line/*, finalLine*/; int index = 0;
+		std::vector<std::string> stringList;
+		std::cout << "Output Sets:\n[Index]\t[Sets]\n";
+		while (std::getline(fileReader, line, '\n'))
+		{
+			std::cout << index << "\t" << line << std::endl;
+			index++;
+			//finalLine += line;
+			//finalLine += '\n';
+			line.erase(remove_if(line.begin(), line.end(), std::ispunct), line.end());
+			stringList.push_back(line);		
+		}
+		//std::cout << finalLine;
+		if (withExpression)
+			parseOutputSet(stringList);
+		fileReader.close();
+	}
+	catch (std::ifstream::failure& e) {
+		std::cout << "\nException Occured: Failed reading file: OutputSet.txt" << " Message: " << e.what();
+	}
 
 	askToContinue(0);
 }
 
 void CmdInterface::saveSetToFile(const std::string& fileName, const std::vector<int>& outputSet)
 {
-	std::ofstream fileWriter(fileName);
+	std::ofstream fileWriter(fileName.c_str(), std::ios::app);
 	fileWriter.exceptions(std::ofstream::badbit | std::ofstream::failbit);
-	try 
+	try
 	{
 		for (int i = 0; i < outputSet.size(); i++)
-		{
-			if(i == outputSet.size() - 1)
-				fileWriter << outputSet[i];
-			else
-				fileWriter << outputSet[i] << ", ";
-		}
+			(i == outputSet.size() - 1) ? fileWriter << outputSet[i] : fileWriter << outputSet[i] << ", ";
+		fileWriter << "\n";
+		fileWriter.close();
 	}
 	catch (std::ofstream::failure& e)
 	{
-		std::cout << "Exception Occured: Failed writing to file: " << fileName << " Message: " << e.what();
+		std::cout << "\nException Occured: Failed writing to file: " << fileName << " Message: " << e.what();
 	}
+
+	std::cout << "\nFile Saved: " << fileName;
+	askToContinue(0);
 }
 
-void CmdInterface::readSetFromFile(std::string fileName)
+void CmdInterface::parseOutputSet(const std::vector<std::string>& outputLinesV)
 {
+	std::cout << "\nEnter the [Index] to select the set: ";
+	int index; std::cin.ignore(); std::cin >> index;
+	if (index < 0 || index > outputLinesV.size() - 1)
+	{
+		std::cout << "\nInvalid Index entered!";
+		return;
+	}
+	getOutputSet(outputLinesV[index]);
+}
 
+void CmdInterface::getOutputSet(const std::string& strSet)
+{
+	int num;
+	std::vector<int> intSet;
+	std::stringstream ss(strSet);
+	while (ss >> num)
+		intSet.push_back(num);
 }
