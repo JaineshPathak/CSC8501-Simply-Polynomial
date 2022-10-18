@@ -5,7 +5,7 @@
 #include <cmath>
 #include "Rules.h"
 #include "Poly.h"
-#include "ParserUtils.h"
+#include "Utils.h"
 
 class CmdInterface
 {
@@ -32,7 +32,7 @@ private:
 
 	void showMainMenu();
 	void processExpression();
-	void deriveExpression();
+	void deriveExpression(const std::vector<int> outputSet);
 
 	void readFile(bool withExpression = false);
 	void saveSetToFile(const std::string& fileName, const std::vector<int>& outputSet);

@@ -146,7 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdInterface.h" />
-    <ClInclude Include="ParserUtils.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="Poly.h" />
     <ClInclude Include="Rules.h" />
     <ClInclude Include="Term.h" />

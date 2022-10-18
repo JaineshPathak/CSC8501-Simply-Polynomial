@@ -35,7 +35,7 @@
     <ClInclude Include="Poly.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParserUtils.h">
+    <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rules.h">

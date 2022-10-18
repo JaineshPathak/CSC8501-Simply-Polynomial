@@ -77,7 +77,7 @@ void CmdInterface::parsePoly(strIndex* strIndex, int str_size, Poly& poly)
 		bool coeffIsConstant = false;
 
 		int sign = checkSign(strIndex);
-		ParserUtils::getNumberFromString(&strIndex->str, coeff);
+		Utils::getNumberFromString(&strIndex->str, coeff);
 		coeff *= sign;
 
 		power = checkExponent(strIndex, coeffIsConstant);
@@ -120,7 +120,7 @@ int CmdInterface::checkExponent(strIndex* strIndex, bool& coeffIsConstant)
 		if (*strIndex->str == '^')
 		{
 			strIndex->str++;
-			ParserUtils::getNumberFromString(&strIndex->str, power);
+			Utils::getNumberFromString(&strIndex->str, power);
 		}
 	}
 	else
@@ -166,10 +166,9 @@ void CmdInterface::showMainMenu()
 	system("cls");
 	std::cout << "Enter Numbers to initiate commands: " << std::endl;
 	std::cout << "1. Enter Expression and get Output Set\n";
-	std::cout << "2. Read file and get Output Set\n";
-	std::cout << "3. Read file and derive Expression\n";
+	std::cout << "2. Read file and get Output Sets\n";
+	std::cout << "3. Read Output Set and derive Expression\n";
 	std::cout << "4. Exit\n";
-
 	std::cout << "\nChoose: "; std::cin >> m_state;
 }
 
@@ -194,6 +193,7 @@ void CmdInterface::processExpression()
 	std::vector<int> outputSet;
 	inputRangeAndCalc(startNum, finishNum, poly, outputSet);
 	askSaveFile(outputSet);
+	askToContinue(0);
 }
 
 void CmdInterface::readFile(bool withExpression)
@@ -215,7 +215,7 @@ void CmdInterface::readFile(bool withExpression)
 			index++;
 			//finalLine += line;
 			//finalLine += '\n';
-			line.erase(remove_if(line.begin(), line.end(), std::ispunct), line.end());
+			line.erase(remove(line.begin(), line.end(), ','), line.end());
 			stringList.push_back(line);		
 		}
 		//std::cout << finalLine;
@@ -247,7 +247,6 @@ void CmdInterface::saveSetToFile(const std::string& fileName, const std::vector<
 	}
 
 	std::cout << "\nFile Saved: " << fileName;
-	askToContinue(0);
 }
 
 void CmdInterface::parseOutputSet(const std::vector<std::string>& outputLinesV)
@@ -264,9 +263,56 @@ void CmdInterface::parseOutputSet(const std::vector<std::string>& outputLinesV)
 
 void CmdInterface::getOutputSet(const std::string& strSet)
 {
-	int num;
+	int num = 0;
 	std::vector<int> intSet;
 	std::stringstream ss(strSet);
 	while (ss >> num)
 		intSet.push_back(num);
+
+	deriveExpression(intSet);
+}
+
+void CmdInterface::deriveExpression(const std::vector<int> outputSet)
+{
+	int degreeRound = 0, size = 11;
+	std::vector<int> deltaSet, prevDeltaSet = outputSet;
+	do
+	{
+		degreeRound++; size--;
+		deltaSet = Utils::getDifferentiateVector(prevDeltaSet, size);
+		//Utils::printVector(deltaSet);
+		prevDeltaSet = deltaSet;
+	} while (!Utils::isVectorConstant(deltaSet));
+
+	std::cout << "\nPolynomial has " << degreeRound << " terms";
+	std::cout << "\na = " << deltaSet[0] / Utils::factorial(degreeRound);
+	/*for (int i = 1; i < size; i++)
+		deltaSet.push_back(outputSet[i] - outputSet[i - 1]);
+
+	Utils::printVector(deltaSet);
+	if (!Utils::isVectorConstant(deltaSet))
+	{
+		deltaRound++; size--;
+		std::vector<int> deltaSet2;
+		for (int i = 1; i < size; i++)
+			deltaSet2.push_back(deltaSet[i] - deltaSet[i - 1]);
+
+		Utils::printVector(deltaSet2);
+		if (!Utils::isVectorConstant(deltaSet2))
+		{
+			deltaRound++; size--;
+			std::vector<int> deltaSet3;
+			for (int i = 1; i < size; i++)
+				deltaSet3.push_back(deltaSet2[i] - deltaSet2[i - 1]);
+
+			Utils::printVector(deltaSet3);
+			if (Utils::isVectorConstant(deltaSet3))
+			{
+				int coeff = deltaSet3[0] / (Utils::factorial(deltaRound));
+				int power = deltaRound;
+
+				std::cout << "\n\nCoeff: " << coeff << ", Power: " << power;
+			}
+		}
+	}*/
 }
