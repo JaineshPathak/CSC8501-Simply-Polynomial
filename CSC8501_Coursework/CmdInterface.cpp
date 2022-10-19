@@ -315,7 +315,7 @@ void CmdInterface::deriveExpression(const std::vector<int> outputSet)
 	std::cout << matrix[i - 2][j] << "\n";*/
 	int rowsIgnored = 0;
 	std::vector<std::vector<int>> matrixCopy;
-	std::cout << "\nRows: " << rows << ", Cols: " << cols;
+	std::cout << "\nRows: " << rows << " | Cols: " << cols;
 	for (int k = 0; k < degreeRound; k++)
 	{
 		matrixCopy = matrix;
@@ -342,9 +342,7 @@ void CmdInterface::deriveExpression(const std::vector<int> outputSet)
 				continue;
 
 			for (int j = 0; j < cols; j++)
-			{
 				matrix[i][j] = matrixCopy[i][j] - matrixCopy[i - 1][j];
-			}
 		}
 		rowsIgnored++;
 		Utils::printMatrixVector(matrix, rows, cols);
@@ -353,9 +351,59 @@ void CmdInterface::deriveExpression(const std::vector<int> outputSet)
 	std::cout << "\n";
 	int* finalCoeffs = new int[rows] {0};
 
+	int termToLook = 0;
 	finalCoeffs[0] = matrix[rows - 1][cols - 1] / matrix[rows - 1][0];	//1st Coeff or 'a'
-	finalCoeffs[rows - 1] = matrix[0][cols - 1];						//last constant - d/e etc
+	termToLook++;
+	//finalCoeffs[rows - 1] = matrix[0][cols - 1];						//last constant - d/e etc
+
+	std::vector<std::vector<int>> matrixFinal = matrix;
+	for (int i = rows - 2; i >= 0; i--)
+	{
+		int toFind = matrixFinal[i][termToLook];
+		for (int t = 0; t < termToLook; t++)
+			matrixFinal[i][t] *= finalCoeffs[t];
+		for (int j = 0; j < cols; j++)
+		{
+			if (j != cols - 1 && j != termToLook)
+				matrixFinal[i][j] *= -1;
+		}
+
+		int sum = matrixFinal[i][cols - 1];
+		for (int k = 0; k < termToLook; k++)
+			sum += matrixFinal[i][k];
+
+		finalCoeffs[termToLook] = sum / toFind;
+		termToLook++;
+		if (i == 0 && termToLook == cols - 2)
+		{
+			finalCoeffs[termToLook] = matrixFinal[i][cols - 1];
+			break;
+		}
+
+		//Utils::printMatrixVector(matrixFinal, rows, cols);
+	}
+
+	//Utils::printMatrixVector(matrixFinal, rows, cols);
 	Utils::printArray(finalCoeffs, rows);
+
+	int power = degreeRound;
+	std::cout << "\n\nYour Expression is: ";
+	for (int i = 0; i < rows; i++)
+	{
+		if (finalCoeffs[i] != 0)
+		{
+			if (finalCoeffs[i] > 0 && i > 0)
+				std::cout << " + ";			
+
+			if(finalCoeffs[i] != 1)
+				std::cout << finalCoeffs[i];
+			if (i != rows - 1)
+				std::cout << "x";
+			if (power > 0 && power != 1)
+				std::cout << "^" << power;
+		}
+		power--;
+	}
 
 #pragma region DRYRUNCOEFFS
 	//int* finalCoeffs = new int[rows];
