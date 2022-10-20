@@ -108,7 +108,7 @@ void ProcessExprForward::askSaveFile()
 		case 'Y':
 		{
 			FileHandler fh = FileHandler();
-			fh.saveOutputSetFile(m_outputSet);
+			fh.saveFile(m_outputSet);
 			break;		
 		}
 

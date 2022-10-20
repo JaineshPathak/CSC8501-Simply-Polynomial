@@ -1,11 +1,13 @@
 #pragma once
 #include "ProcessExprBase.h"
+#include "Poly.h"
 #include "Utils.h"
 
 class ProcessExprReverse : public ProcessExprBase
 {
 private:
-	bool m_forExpression;
+	int m_mode = 0;		//1 - Single Expression, 2 - Batch Expression
+
 	std::vector<std::string> m_outputSetS;
 	std::vector<int> m_outputSetN;
 	std::vector<std::vector<int>> m_matrix;
@@ -14,20 +16,24 @@ private:
 	int m_matrixRows, m_matrixCols;
 	int* m_finalCoeffs;
 
+	std::string m_finalExpressionsStr;
+
 public:
-	ProcessExprReverse();
-	ProcessExprReverse(const bool _forExpression);
+	ProcessExprReverse() : m_mode(0) { process(); }
+	ProcessExprReverse(const int& _mode) : m_mode(_mode) { process(); }
 	~ProcessExprReverse();
 
 private:
 	void printAllOutputSets();
 	void askOutputIndex();
-	void parseOutputSetString(const std::string& strSet);
-	void startDifferentiateProcess();
-	void prepareMatrixProcess();
-	void startMatrixProcess();
-	void startCoefficientsHunt();
+	void parseOutputSetString(const std::string& strSet, const bool batchMode = false);
+	void startDifferentiateProcess(const bool batchMode = false);
+	void prepareMatrixProcess(const bool batchMode = false);
+	void startMatrixProcess(const bool batchMode = false);
+	void startCoefficientsHunt(const bool batchMode = false);
 	void printDerivedExpression();
+	void printDerivedExpressionBatch();
+	void batchProcessAllSets();
 
 public:
 	void process() override;

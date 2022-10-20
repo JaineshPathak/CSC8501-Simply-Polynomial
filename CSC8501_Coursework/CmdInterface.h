@@ -1,19 +1,12 @@
 #pragma once
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cmath>
 #include "ProcessExprForward.h"
 #include "ProcessExprReverse.h"
-#include "Rules.h"
-#include "Poly.h"
-#include "Utils.h"
-#include "FileHandler.h"
 
 class CmdInterface
 {
 private:
-	int m_state;		//0 - Main Menu, 1 - Generate Output Sets, 2 - Derive Expression, 3 - Exit
+	int m_state;		//0 - Main Menu, 1 - Generate Output Set, 2 - Show Output Sets, 3 - Derive Expression, 4 - Derive Expression (batch), 5 - Exit
 	bool m_isRunning;
 
 public:

@@ -1,16 +1,31 @@
 #include "Term.h"
 
-int Term::getCoeff() { return m_coeff; }
+int Term::getCoeff() const { return m_coeff; }
 
-int Term::getPower() { return m_power; }
+int Term::getPower() const { return m_power; }
 
-bool Term::isConstant() { return m_coeffIsConstant; }
+bool Term::isConstant() const { return m_coeffIsConstant; }
 
 std::ostream& operator<<(std::ostream& os, const Term& T)
 {
-	if(!T.m_coeffIsConstant)
-		os << T.m_coeff << "x" << "^" << T.m_power;
-	else
+	//os << " ";
+	if (!T.m_coeffIsConstant)
+	{
+		if (T.m_coeff != 0)
+		{
+			if (T.m_coeff == 1)
+				os << "x";
+			else if (T.m_coeff == -1)
+				os << "-x";
+			else
+				os << T.m_coeff << "x";
+		}
+
+		if (T.m_power > 1 && T.m_coeff != 0)
+			os << "^" << T.m_power;
+		//os << T.m_coeff << "x" << "^" << T.m_power;
+	}
+	else if(T.m_coeffIsConstant && T.m_coeff != 0)
 		os << T.m_coeff;
 	return os;
 }

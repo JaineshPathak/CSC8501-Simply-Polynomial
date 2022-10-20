@@ -26,3 +26,16 @@ void Poly::calculatePoly(const int& start, const int& end, std::vector<int>& v)
 		v.push_back(val);
 	}
 }
+
+std::ostream& operator<<(std::ostream& os, const Poly& P)
+{
+	for (size_t i = 0; i < P.m_termsList.size(); i++)
+	{
+		if (P.m_termsList[i].getCoeff() > 0 && i != 0)
+			os << "+" << P.m_termsList[i];
+		else
+			os << P.m_termsList[i];
+	}
+
+	return os;
+}

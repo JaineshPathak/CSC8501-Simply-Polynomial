@@ -38,11 +38,17 @@ void CmdInterface::update()
 	case 3:
 	{
 		//readFile(true);
-		ProcessExprReverse reverseProcess = ProcessExprReverse(true);
+		ProcessExprReverse reverseProcess = ProcessExprReverse(1);
 		askToContinue(0);
 		break;
 	}
 	case 4:
+	{
+		ProcessExprReverse reverseProcess = ProcessExprReverse(2);
+		askToContinue(0);
+		break;
+	}
+	case 5:
 		m_isRunning = false;
 		break;
 
@@ -60,7 +66,8 @@ void CmdInterface::showMainMenu()
 	std::cout << "1. Enter Expression and get Output Set\n";
 	std::cout << "2. Read file and get Output Sets\n";
 	std::cout << "3. Read Output Set and derive Expression\n";
-	std::cout << "4. Exit\n";
+	std::cout << "4. Read All Output Sets and derive Expression (Batch Style)\n";
+	std::cout << "5. Exit\n";
 	std::cout << "\nChoose: "; std::cin >> m_state;
 }
 

@@ -22,6 +22,13 @@ namespace Utils
 		}
 	}
 
+	static void clearMatrixVector(std::vector<std::vector<int>>& matrix, const int rows)
+	{
+		for (int i = 0; i < rows; i++)
+			matrix[i].clear();
+		matrix.clear();
+	}
+
 	static bool isVectorConstant(const std::vector<int>& v)
 	{
 		if (v.size() <= 0)

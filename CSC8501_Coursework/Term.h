@@ -35,8 +35,8 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Term& T);
 
 public:
-	int getCoeff();
-	int getPower();
-	bool isConstant();
+	int getCoeff() const;
+	int getPower() const;
+	bool isConstant() const;
 	int getCalculatedVal(const int _v) const;
 };
