@@ -3,9 +3,12 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include "ProcessExprForward.h"
+#include "ProcessExprReverse.h"
 #include "Rules.h"
 #include "Poly.h"
 #include "Utils.h"
+#include "FileHandler.h"
 
 class CmdInterface
 {

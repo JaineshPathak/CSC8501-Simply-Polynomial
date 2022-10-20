@@ -49,14 +49,26 @@ void CmdInterface::update()
 		showMainMenu();
 		break;
 	case 1:
-		processExpression();
+	{
+		//processExpression();
+		ProcessExprForward forwardProcess = ProcessExprForward();
+		askToContinue(0);
 		break;
+	}
 	case 2:
-		readFile();
+	{
+		//readFile();
+		ProcessExprReverse reverseProcess = ProcessExprReverse();
+		askToContinue(0);
 		break;
+	}
 	case 3:
-		readFile(true);
+	{
+		//readFile(true);
+		ProcessExprReverse reverseProcess = ProcessExprReverse(true);
+		askToContinue(0);
 		break;
+	}
 	case 4:
 		m_isRunning = false;
 		break;
@@ -81,10 +93,10 @@ void CmdInterface::parsePoly(strIndex* strIndex, int str_size, Poly& poly)
 		coeff *= sign;
 
 		power = checkExponent(strIndex, coeffIsConstant);
-		(power > MAX_DEGREE) ? throw std::invalid_argument(std::string("Invalid Exponent/Degree: " + std::to_string(power) + " in the term. Must be less or equal to " + std::to_string(MAX_DEGREE))) : void();
+		(power > Rules::MAX_DEGREE) ? throw std::invalid_argument(std::string("Invalid Exponent/Degree: " + std::to_string(power) + " in the term. Must be less or equal to " + std::to_string(Rules::MAX_DEGREE))) : void();
 
-		(!coeffIsConstant && std::abs(coeff) > MAX_COEFFICIENT) ? throw std::invalid_argument(std::string("Invalid Coefficient: " + std::to_string(coeff) + " in the term. Must be less or equal to ") + std::to_string(MAX_COEFFICIENT)) : void();
-		(coeffIsConstant && std::abs(coeff) > MAX_CONSTANT) ? throw std::invalid_argument(std::string("Invalid Constant: " + std::to_string(coeff) + " in the term. Must be less or equal to " + std::to_string(MAX_CONSTANT))) : void();
+		(!coeffIsConstant && std::abs(coeff) > Rules::MAX_COEFFICIENT) ? throw std::invalid_argument(std::string("Invalid Coefficient: " + std::to_string(coeff) + " in the term. Must be less or equal to ") + std::to_string(Rules::MAX_COEFFICIENT)) : void();
+		(coeffIsConstant && std::abs(coeff) > Rules::MAX_CONSTANT) ? throw std::invalid_argument(std::string("Invalid Constant: " + std::to_string(coeff) + " in the term. Must be less or equal to " + std::to_string(Rules::MAX_CONSTANT))) : void();
 
 		Term term = Term(coeff, power, coeffIsConstant);
 		poly.addTerm(term);		
@@ -142,21 +154,25 @@ void CmdInterface::askSaveFile(const std::vector<int>& outputSet)
 	std::cin.ignore();
 	char saveChar; std::cin >> saveChar;
 
-	std::string fileName("OutputSet.txt");
+	//std::string fileName("OutputSet.txt");
 	switch (saveChar)
 	{
-	case 'y':
-	case 'Y':
-		/*std::cout << "\nEnter Filename: ";
-		std::cin.ignore();
-		std::cin >> fileName;*/
-		saveSetToFile(fileName, outputSet);
-		break;
+		case 'y':
+		case 'Y':
+		{
+			FileHandler f = FileHandler();
+			f.saveOutputSetFile(outputSet);
+			break;
+			/*std::cout << "\nEnter Filename: ";
+			std::cin.ignore();
+			std::cin >> fileName;*/
+			//saveSetToFile(fileName, outputSet);
+		}
 
-	case 'n':
-	case 'N':
-	default:
-		return;
+		case 'n':
+		case 'N':
+		default:
+			return;
 	}
 }
 
@@ -250,7 +266,7 @@ void CmdInterface::saveSetToFile(const std::string& fileName, const std::vector<
 
 void CmdInterface::parseOutputSet(const std::vector<std::string>& outputLinesV)
 {
-	std::cout << "\nEnter the [Index] to select the set: ";
+	std::cout << "\nEnter the [Index] to select the output set: ";
 	int index; std::cin.ignore(); std::cin >> index;
 	if (index < 0 || index > outputLinesV.size() - 1)
 	{
@@ -273,7 +289,7 @@ void CmdInterface::getOutputSet(const std::string& strSet)
 
 void CmdInterface::deriveExpression(const std::vector<int> outputSet)
 {
-	int degreeRound = 0, size = 11;
+	int degreeRound = 0, size = outputSet.size();
 	std::vector<int> deltaSet, prevDeltaSet = outputSet;
 	do
 	{
@@ -356,27 +372,27 @@ void CmdInterface::deriveExpression(const std::vector<int> outputSet)
 	termToLook++;
 	//finalCoeffs[rows - 1] = matrix[0][cols - 1];						//last constant - d/e etc
 
-	std::vector<std::vector<int>> matrixFinal = matrix;
+	//std::vector<std::vector<int>> matrixFinal = matrix;
 	for (int i = rows - 2; i >= 0; i--)
 	{
-		int toFind = matrixFinal[i][termToLook];
+		int toFind = matrix[i][termToLook];
 		for (int t = 0; t < termToLook; t++)
-			matrixFinal[i][t] *= finalCoeffs[t];
+			matrix[i][t] *= finalCoeffs[t];
 		for (int j = 0; j < cols; j++)
 		{
 			if (j != cols - 1 && j != termToLook)
-				matrixFinal[i][j] *= -1;
+				matrix[i][j] *= -1;
 		}
 
-		int sum = matrixFinal[i][cols - 1];
+		int sum = matrix[i][cols - 1];
 		for (int k = 0; k < termToLook; k++)
-			sum += matrixFinal[i][k];
+			sum += matrix[i][k];
 
 		finalCoeffs[termToLook] = sum / toFind;
 		termToLook++;
 		if (i == 0 && termToLook == cols - 2)
 		{
-			finalCoeffs[termToLook] = matrixFinal[i][cols - 1];
+			finalCoeffs[termToLook] = matrix[i][cols - 1];
 			break;
 		}
 
@@ -393,7 +409,7 @@ void CmdInterface::deriveExpression(const std::vector<int> outputSet)
 		if (finalCoeffs[i] != 0)
 		{
 			if (finalCoeffs[i] > 0 && i > 0)
-				std::cout << " + ";			
+				std::cout << "+";			
 
 			if(finalCoeffs[i] != 1)
 				std::cout << finalCoeffs[i];

@@ -27,7 +27,7 @@ namespace Utils
 		if (v.size() <= 0)
 			return false;
 
-		for (int i = 0; i < v.size(); i++)
+		for (size_t i = 0; i < v.size(); i++)
 			if (v[i] != v[0])
 				return false;
 

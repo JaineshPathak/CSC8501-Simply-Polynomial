@@ -34,16 +34,9 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const Term& T);
 
-private:
-	int parseCoefficient(const char* str);
-	int parseExponent(const char* str);
-
-	int getSign(const char* str);
-	int getNumberDigit(const char* str);
-
 public:
 	int getCoeff();
 	int getPower();
 	bool isConstant();
-	int getCalculatedVal(int _v) const;
+	int getCalculatedVal(const int _v) const;
 };

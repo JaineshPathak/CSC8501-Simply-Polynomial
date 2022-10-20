@@ -140,12 +140,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CmdInterface.cpp" />
+    <ClCompile Include="FileHandler.cpp" />
+    <ClCompile Include="ProcessExprForward.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Poly.cpp" />
+    <ClCompile Include="ProcessExprReverse.cpp" />
     <ClCompile Include="Term.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ProcessExprBase.h" />
     <ClInclude Include="CmdInterface.h" />
+    <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="ProcessExprForward.h" />
+    <ClInclude Include="ProcessExprReverse.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Poly.h" />
     <ClInclude Include="Rules.h" />
