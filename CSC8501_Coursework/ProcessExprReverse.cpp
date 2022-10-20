@@ -158,16 +158,20 @@ void ProcessExprReverse::printDerivedExpressionBatch()
 		if (m_finalCoeffs[i] != 0)
 		{
 			if (m_finalCoeffs[i] == 1)
-				m_finalExpressionsStr += "x";
-			else if(m_finalCoeffs[i] == -1)
+				m_finalExpressionsStr += (i == m_matrixRows - 1) ? "1" : "x";
+			else if(m_finalCoeffs[i] == -1 && i != m_matrixRows - 1)
 				m_finalExpressionsStr += "-x";
 			else
-				m_finalExpressionsStr += std::to_string(m_finalCoeffs[i]) + "x";
+			{
+				m_finalExpressionsStr += std::to_string(m_finalCoeffs[i]);
+				if (i != m_matrixRows - 1)
+					m_finalExpressionsStr += "x";
+			}
 		}
 		if (power > 1 && m_finalCoeffs[i] != 0)
-			m_finalExpressionsStr += "^" + power;
+			m_finalExpressionsStr += "^" + std::to_string(power);
 		power--;
-	}	
+	}
 	m_finalExpressionsStr += "\n";
 }
 

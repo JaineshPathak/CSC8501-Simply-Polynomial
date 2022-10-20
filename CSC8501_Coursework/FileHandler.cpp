@@ -60,7 +60,6 @@ void FileHandler::saveFile(const std::string& expressionStr)
 	try
 	{
 		fileWriter << expressionStr;
-		fileWriter << "\n";
 		fileWriter.close();
 	}
 	catch (std::ofstream::failure& e)

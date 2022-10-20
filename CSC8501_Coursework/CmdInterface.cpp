@@ -64,7 +64,7 @@ void CmdInterface::showMainMenu()
 	system("cls");
 	std::cout << "Enter Numbers to initiate commands: " << std::endl;
 	std::cout << "1. Enter Expression and get Output Set\n";
-	std::cout << "2. Read file and get Output Sets\n";
+	std::cout << "2. Read file and view Output Sets\n";
 	std::cout << "3. Read Output Set and derive Expression\n";
 	std::cout << "4. Read All Output Sets and derive Expression (Batch Style)\n";
 	std::cout << "5. Exit\n";
