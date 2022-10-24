@@ -39,4 +39,6 @@ public:
 	int getPower() const;
 	bool isConstant() const;
 	int getCalculatedVal(const int _v) const;
+
+	std::string to_str();
 };

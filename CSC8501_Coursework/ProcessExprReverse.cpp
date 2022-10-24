@@ -130,13 +130,13 @@ void ProcessExprReverse::startCoefficientsHunt(const bool batchMode)
 			break;
 		}
 	}
-	batchMode ? printDerivedExpressionBatch() : printDerivedExpression();
+	//batchMode ? printDerivedExpressionBatch() : printDerivedExpression();
+	printDerivedExpression(batchMode);
 }
 
-void ProcessExprReverse::printDerivedExpression()
+void ProcessExprReverse::printDerivedExpression(const bool batchMode)
 {
 	int power = m_maxDegree;
-	std::cout << "\n\nDerived Expression: ";
 	Poly poly = Poly();
 	for (int i = 0; i < m_matrixRows; i++)
 	{
@@ -144,10 +144,16 @@ void ProcessExprReverse::printDerivedExpression()
 		poly.addTerm(term);
 		power--;
 	}
-	std::cout << poly;
+
+	if(!batchMode)
+		std::cout << "\nDerived Expression: " << poly;
+	else
+		m_finalExpressionsStr += poly.to_str() + "\n";
+	//std::cout << poly.to_str() << "\n";
 }
 
-void ProcessExprReverse::printDerivedExpressionBatch()
+#pragma region REMOVED
+/*void ProcessExprReverse::printDerivedExpressionBatch()
 {
 	int power = m_maxDegree;
 	for (int i = 0; i < m_matrixRows; i++)
@@ -173,7 +179,9 @@ void ProcessExprReverse::printDerivedExpressionBatch()
 		power--;
 	}
 	m_finalExpressionsStr += "\n";
-}
+}*/
+#pragma endregion
+
 
 void ProcessExprReverse::batchProcessAllSets()
 {

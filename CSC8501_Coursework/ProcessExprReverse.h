@@ -31,8 +31,8 @@ private:
 	void prepareMatrixProcess(const bool batchMode = false);
 	void startMatrixProcess(const bool batchMode = false);
 	void startCoefficientsHunt(const bool batchMode = false);
-	void printDerivedExpression();
-	void printDerivedExpressionBatch();
+	void printDerivedExpression(const bool batchMode = false);
+	//void printDerivedExpressionBatch();
 	void batchProcessAllSets();
 
 public:

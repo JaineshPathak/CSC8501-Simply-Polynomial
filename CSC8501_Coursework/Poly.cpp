@@ -36,6 +36,16 @@ std::ostream& operator<<(std::ostream& os, const Poly& P)
 		else
 			os << P.m_termsList[i];
 	}
-
 	return os;
+}
+
+std::string Poly::to_str()
+{
+	if (m_termsList.size() == 0) return std::string();
+	
+	std::string pStr;
+	for (size_t i = 0; i < m_termsList.size(); i++)
+		pStr += (m_termsList[i].getCoeff() > 0 && i != 0) ? "+" + m_termsList[i].to_str() : m_termsList[i].to_str();
+
+	return pStr;
 }

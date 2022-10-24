@@ -6,7 +6,7 @@
 class CmdInterface
 {
 private:
-	int m_state;		//0 - Main Menu, 1 - Generate Output Set, 2 - Show Output Sets, 3 - Derive Expression, 4 - Derive Expression (batch), 5 - Exit
+	char m_state;		//0 - Main Menu, 1 - Generate Output Set, 2 - Show Output Sets, 3 - Derive Expression, 4 - Derive Expression (batch), 5 - Exit
 	bool m_isRunning;
 
 public:
@@ -18,5 +18,5 @@ public:
 
 private:
 	void showMainMenu();
-	void askToContinue(int toState);
+	void askToContinue(char toState);
 };

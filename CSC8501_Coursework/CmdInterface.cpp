@@ -2,13 +2,13 @@
 
 CmdInterface::CmdInterface()
 {
-	m_state = 0;
+	m_state = '0';
 	m_isRunning = true;
 }
 
 CmdInterface::~CmdInterface()
 {
-	m_state = -1;
+	m_state = '-1';
 	m_isRunning = false;
 }
 
@@ -18,43 +18,40 @@ void CmdInterface::update()
 {
 	switch (m_state)
 	{
-	case 0:
+	case '0':
 		showMainMenu();
 		break;
-	case 1:
+	case '1':
 	{
-		//processExpression();
 		ProcessExprForward forwardProcess = ProcessExprForward();
-		askToContinue(0);
+		askToContinue('0');
 		break;
 	}
-	case 2:
+	case '2':
 	{
-		//readFile();
 		ProcessExprReverse reverseProcess = ProcessExprReverse();
-		askToContinue(0);
+		askToContinue('0');
 		break;
 	}
-	case 3:
+	case '3':
 	{
-		//readFile(true);
 		ProcessExprReverse reverseProcess = ProcessExprReverse(1);
-		askToContinue(0);
+		askToContinue('0');
 		break;
 	}
-	case 4:
+	case '4':
 	{
 		ProcessExprReverse reverseProcess = ProcessExprReverse(2);
-		askToContinue(0);
+		askToContinue('0');
 		break;
 	}
-	case 5:
+	case '5':
 		m_isRunning = false;
 		break;
 
 	default:
 		std::cout << "Invalid number!" << std::endl;
-		askToContinue(0);
+		askToContinue('0');
 		break;
 	}
 }
@@ -68,17 +65,17 @@ void CmdInterface::showMainMenu()
 	std::cout << "3. Read Output Set and derive Expression\n";
 	std::cout << "4. Read All Output Sets and derive Expression (Batch Style)\n";
 	std::cout << "5. Exit\n";
-	std::cout << "\nChoose: "; std::cin >> m_state;
+	std::cout << "\nChoose: ";
+	std::cin >> m_state;
 }
 
-void CmdInterface::askToContinue(int toState)
+void CmdInterface::askToContinue(char toState)
 {
 	std::cout << "\n\nPlease any key to continue..." << std::endl;
 	std::cin.ignore();
 	std::cin.get();
 	m_state = toState;
 }
-
 
 #pragma region DRYRUNCOEFFS
 	//int* finalCoeffs = new int[rows];

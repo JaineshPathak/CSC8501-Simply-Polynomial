@@ -19,8 +19,8 @@ void FileHandler::readOutputSetFile(std::vector<std::string>& outputSetStr)
 	fileReader.exceptions(std::ifstream::badbit);
 	try
 	{
-		if (!fileReader.good())
-			throw std::ifstream("Probably file doesn't exists or badbit Error");
+		if (!fileReader.good())	throw std::ifstream::failure("Probably file doesn't exists or Badbit Error");
+		if (fileReader.peek() == EOF) throw std::ifstream::failure("File is Empty!");
 
 		std::string line/*, finalLine*/;
 		while (std::getline(fileReader, line, '\n'))
@@ -46,8 +46,7 @@ void FileHandler::saveFile(const std::vector<int>& outputSet)
 		fileWriter << "\n";
 		fileWriter.close();
 	}
-	catch (std::ofstream::failure& e)
-	{
+	catch (std::ofstream::failure& e) {
 		std::cout << "\nException Occured: Failed writing to file: " << m_outputSetFilename << "\nMessage: " << e.what();
 	}
 	std::cout << "\nFile Saved: " << m_outputSetFilename;

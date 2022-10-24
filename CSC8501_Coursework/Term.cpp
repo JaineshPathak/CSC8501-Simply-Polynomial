@@ -37,3 +37,27 @@ int Term::getCalculatedVal(const int _v) const
 
 	return m_coeff * pow(_v, m_power);
 }
+
+std::string Term::to_str()
+{
+	std::string tStr;
+	if (!m_coeffIsConstant)
+	{
+		if (m_coeff != 0)
+		{
+			if (m_coeff == 1)
+				tStr += "x";
+			else if (m_coeff == -1)
+				tStr += "-x";
+			else
+				tStr += std::to_string(m_coeff) + "x";
+		}
+
+		if (m_power > 1 && m_coeff != 0)
+			tStr += "^" + std::to_string(m_power);
+	}
+	else if (m_coeffIsConstant && m_coeff != 0)
+		tStr += std::to_string(m_coeff);
+
+	return tStr;
+}

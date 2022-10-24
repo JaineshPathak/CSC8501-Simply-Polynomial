@@ -12,4 +12,6 @@ public:
 	void calculatePoly(const int &start, const int &end, std::vector<int>& v);
 
 	friend std::ostream& operator<<(std::ostream& os, const Poly& P);
+
+	std::string to_str();
 };
