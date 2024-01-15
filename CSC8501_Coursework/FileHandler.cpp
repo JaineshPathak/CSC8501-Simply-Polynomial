@@ -13,14 +13,19 @@ FileHandler::~FileHandler()
 {
 }
 
-void FileHandler::ReadOutputSetFile(std::vector<std::string>& outputSetStr)
+bool FileHandler::ReadOutputSetFile(std::vector<std::string>& outputSetStr)
 {
+	bool success{ true };
+
 	std::ifstream fileReader(m_OutputSetFilename, std::ios::in);
 	fileReader.exceptions(std::ifstream::badbit);
 	try
 	{
 		if (!fileReader.good())
-			throw std::ifstream("Probably file doesn't exists or badbit Error");
+		{
+			success = false;
+			throw std::ifstream::failure("Probably file doesn't exists or badbit Error");
+		}
 
 		std::string line/*, finalLine*/;
 		while (std::getline(fileReader, line, '\n'))
@@ -33,6 +38,8 @@ void FileHandler::ReadOutputSetFile(std::vector<std::string>& outputSetStr)
 	catch (std::ifstream::failure& e) {
 		std::cout << "\nException Occured: Failed reading file: " << m_OutputSetFilename << "\nMessage: " << e.what();
 	}
+
+	return success;
 }
 
 void FileHandler::SaveFile(const std::vector<int>& outputSet)

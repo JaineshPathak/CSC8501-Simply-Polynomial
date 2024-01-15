@@ -11,7 +11,7 @@ public:
 	FileHandler(std::vector<std::string>& outputSetStr);
 	~FileHandler();
 
-	void ReadOutputSetFile(std::vector<std::string>& outputSetStr);
+	bool ReadOutputSetFile(std::vector<std::string>& outputSetStr);
 	void SaveFile(const std::vector<int>& outputSet);
 	void SaveFile(const std::string& expressionStr);
 

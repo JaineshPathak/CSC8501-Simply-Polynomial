@@ -30,19 +30,23 @@ ProcessExprReverse::~ProcessExprReverse()
 void ProcessExprReverse::Process()
 {
 	system("cls");
-	FileHandler fh = FileHandler(m_OutputSetS);
-	PrintAllOutputSets();
-	
-	switch (m_Mode)
+
+	FileHandler fh = FileHandler();
+	if (fh.ReadOutputSetFile(m_OutputSetS))
 	{
-	case 1:
-		AskOutputIndex();
-		break;
-	case 2:
-		BatchProcessAllSets();
-		break;
-	default:
-		return;
+		PrintAllOutputSets();
+
+		switch (m_Mode)
+		{
+		case 1:
+			AskOutputIndex();
+			break;
+		case 2:
+			BatchProcessAllSets();
+			break;
+		default:
+			break;
+		}
 	}
 }
 
