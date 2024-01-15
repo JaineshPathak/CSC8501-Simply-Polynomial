@@ -1,65 +1,64 @@
 #include "CmdInterface.h"
 
-CmdInterface::CmdInterface()
+CmdInterface::CmdInterface() : 
+	m_State(0),
+	m_IsRunning(true)
 {
-	m_state = 0;
-	m_isRunning = true;
 }
 
 CmdInterface::~CmdInterface()
 {
-	m_state = -1;
-	m_isRunning = false;
+	m_State = -1;
+	m_IsRunning = false;
 }
 
-bool CmdInterface::isRunning() const { return m_isRunning; }
+bool CmdInterface::IsRunning() const { return m_IsRunning; }
 
-void CmdInterface::update()
+void CmdInterface::Update()
 {
-	switch (m_state)
+	switch (m_State)
 	{
 	case 0:
-		showMainMenu();
+		ShowMainMenu();
 		break;
 	case 1:
 	{
-		//processExpression();
 		ProcessExprForward forwardProcess = ProcessExprForward();
-		askToContinue(0);
+		AskToContinue(0);
 		break;
 	}
 	case 2:
 	{
 		//readFile();
 		ProcessExprReverse reverseProcess = ProcessExprReverse();
-		askToContinue(0);
+		AskToContinue(0);
 		break;
 	}
 	case 3:
 	{
 		//readFile(true);
 		ProcessExprReverse reverseProcess = ProcessExprReverse(1);
-		askToContinue(0);
+		AskToContinue(0);
 		break;
 	}
 	case 4:
 	{
 		ProcessExprReverse reverseProcess = ProcessExprReverse(2);
-		askToContinue(0);
+		AskToContinue(0);
 		break;
 	}
 	case 5:
-		m_isRunning = false;
+		m_IsRunning = false;
 		break;
 
 	default:
 		std::cout << "Invalid number!" << std::endl;
-		askToContinue(0);
+		AskToContinue(0);
 		break;
 	}
 }
 
-void CmdInterface::showMainMenu()
+void CmdInterface::ShowMainMenu()
 {
 	system("cls");
 	std::cout << "Enter Numbers to initiate commands: " << std::endl;
@@ -68,15 +67,15 @@ void CmdInterface::showMainMenu()
 	std::cout << "3. Read Output Set and derive Expression\n";
 	std::cout << "4. Read All Output Sets and derive Expression (Batch Style)\n";
 	std::cout << "5. Exit\n";
-	std::cout << "\nChoose: "; std::cin >> m_state;
+	std::cout << "\nChoose: "; std::cin >> m_State;
 }
 
-void CmdInterface::askToContinue(int toState)
+void CmdInterface::AskToContinue(int toState)
 {
 	std::cout << "\n\nPlease any key to continue..." << std::endl;
 	std::cin.ignore();
 	std::cin.get();
-	m_state = toState;
+	m_State = toState;
 }
 
 

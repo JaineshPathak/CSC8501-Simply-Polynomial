@@ -1,39 +1,33 @@
 #include "Term.h"
 
-int Term::getCoeff() const { return m_coeff; }
-
-int Term::getPower() const { return m_power; }
-
-bool Term::isConstant() const { return m_coeffIsConstant; }
-
 std::ostream& operator<<(std::ostream& os, const Term& T)
 {
 	//os << " ";
-	if (!T.m_coeffIsConstant)
+	if (!T.m_CoeffIsConstant)
 	{
-		if (T.m_coeff != 0)
+		if (T.m_Coeff != 0)
 		{
-			if (T.m_coeff == 1)
+			if (T.m_Coeff == 1)
 				os << "x";
-			else if (T.m_coeff == -1)
+			else if (T.m_Coeff == -1)
 				os << "-x";
 			else
-				os << T.m_coeff << "x";
+				os << T.m_Coeff << "x";
 		}
 
-		if (T.m_power > 1 && T.m_coeff != 0)
-			os << "^" << T.m_power;
+		if (T.m_Power > 1 && T.m_Coeff != 0)
+			os << "^" << T.m_Power;
 		//os << T.m_coeff << "x" << "^" << T.m_power;
 	}
-	else if(T.m_coeffIsConstant && T.m_coeff != 0)
-		os << T.m_coeff;
+	else if(T.m_CoeffIsConstant && T.m_Coeff != 0)
+		os << T.m_Coeff;
+
 	return os;
 }
 
-int Term::getCalculatedVal(const int _v) const
+int Term::GetCalculatedVal(const int& _v)
 {
-	if (m_power < 0)
-		return 0;
+	if (m_Power < 0) return 0;
 
-	return m_coeff * pow(_v, m_power);
+	return m_Coeff * (int)pow(_v, m_Power);
 }

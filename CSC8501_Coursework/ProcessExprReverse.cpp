@@ -1,209 +1,243 @@
 #include "ProcessExprReverse.h"
 
-ProcessExprReverse::~ProcessExprReverse()
+ProcessExprReverse::ProcessExprReverse() :
+	m_Mode(0),
+	m_BatchProcessMode(false),
+	m_MaxDegree(0),
+	m_OutputSetNSize(0),
+	m_MatrixRows(0), m_MatrixCols(0),
+	m_FinalExpressionsStr("")
 {
-	delete[] m_finalCoeffs;
+	Process();
 }
 
-void ProcessExprReverse::printAllOutputSets()
+ProcessExprReverse::ProcessExprReverse(const int& _mode) :
+	m_Mode(_mode),
+	m_BatchProcessMode(false),
+	m_MaxDegree(0),
+	m_OutputSetNSize(0),
+	m_MatrixRows(0), m_MatrixCols(0),
+	m_FinalExpressionsStr("")
 {
-	if (m_outputSetS.size() == 0) return;
+	Process();
+}
+
+ProcessExprReverse::~ProcessExprReverse()
+{
+	delete[] m_FinalCoeffs;
+}
+
+void ProcessExprReverse::Process()
+{
+	system("cls");
+	FileHandler fh = FileHandler(m_OutputSetS);
+	PrintAllOutputSets();
+	
+	switch (m_Mode)
+	{
+	case 1:
+		AskOutputIndex();
+		break;
+	case 2:
+		BatchProcessAllSets();
+		break;
+	default:
+		return;
+	}
+}
+
+void ProcessExprReverse::PrintAllOutputSets()
+{
+	if (m_OutputSetS.size() == 0) return;
 
 	int index = 0;
 	std::cout << "Output Sets:\n[Index]\t[Sets]\n";
-	for (size_t i = 0; i < m_outputSetS.size(); i++, index++)
-		std::cout << index << "\t" << m_outputSetS[i] << std::endl;
+	for (size_t i = 0; i < m_OutputSetS.size(); i++)
+		std::cout << index++ << "\t" << m_OutputSetS[i] << std::endl;
 }
 
-void ProcessExprReverse::askOutputIndex()
+void ProcessExprReverse::AskOutputIndex()
 {
 	std::cout << "\nEnter the [Index] to select the output set: ";
 	int index; std::cin.ignore(); std::cin >> index;
-	if (index < 0 || index > m_outputSetS.size() - 1)
+
+	if (index < 0 || index > (int)m_OutputSetS.size() - 1)
 	{
 		std::cout << "\nInvalid [Index] entered!";
 		return;
 	}
-	parseOutputSetString(m_outputSetS[index]);
+
+	ParseOutputSetString(m_OutputSetS[index]);
 }
 
-void ProcessExprReverse::parseOutputSetString(const std::string& strSet, const bool batchMode)
+void ProcessExprReverse::ParseOutputSetString(const std::string& strSet)
 {
-	if (batchMode) m_outputSetN.clear();
+	if (m_BatchProcessMode) m_OutputSetN.clear();
 
 	int num = 0;
 	std::stringstream ss(strSet);
 	while (ss >> num)
-		m_outputSetN.push_back(num);
+		m_OutputSetN.push_back(num);
 
-	startDifferentiateProcess(batchMode);
+	StartDifferentiateProcess();
 }
 
-void ProcessExprReverse::startDifferentiateProcess(const bool batchMode)
+void ProcessExprReverse::StartDifferentiateProcess()
 {
-	m_maxDegree = 0;
-	m_outputSetNSize = m_outputSetN.size();
-	std::vector<int> deltaSet, prevDeltaSet = m_outputSetN;
+	m_MaxDegree = 0;
+	m_OutputSetNSize = m_OutputSetN.size();
+	std::vector<int> deltaSet, prevDeltaSet = m_OutputSetN;
 	do
 	{
-		m_maxDegree++; m_outputSetNSize--;
-		deltaSet = Utils::getDifferentiateVector(prevDeltaSet, m_outputSetNSize);
+		m_MaxDegree++; m_OutputSetNSize--;
+		deltaSet = Utils::GetDifferentiateVector(prevDeltaSet, m_OutputSetNSize);
 		//Utils::printVector(deltaSet);
 		prevDeltaSet = deltaSet;
-	} while (!Utils::isVectorConstant(deltaSet));
-	prepareMatrixProcess(batchMode);
+	} while (!Utils::IsVectorConstant(deltaSet));
+
+	PrepareMatrixProcess();
 }
 
-void ProcessExprReverse::prepareMatrixProcess(const bool batchMode)
+void ProcessExprReverse::PrepareMatrixProcess()
 {
-	if (batchMode) Utils::clearMatrixVector(m_matrix, m_matrixRows);
+	if (m_BatchProcessMode) Utils::ClearMatrixVector(m_Matrix, m_MatrixRows);
 
-	m_matrixRows = m_maxDegree + 1; m_matrixCols = m_maxDegree + 2;
-	Utils::morphMatrixVect(m_matrix, m_matrixRows, m_matrixCols);
-	for (int i = 0; i < m_matrixRows; i++)
+	m_MatrixRows = m_MaxDegree + 1; 
+	m_MatrixCols = m_MaxDegree + 2;
+	Utils::MorphMatrixVect(m_Matrix, m_MatrixRows, m_MatrixCols);
+	for (int i = 0; i < m_MatrixRows; i++)
 	{
-		int matPower = m_maxDegree;
-		for (int j = 0; j < m_matrixCols; j++)
+		int matPower = m_MaxDegree;
+		for (int j = 0; j < m_MatrixCols; j++)
 		{
-			if (j >= 0 && j < m_matrixCols - 3)
+			if (j >= 0 && j < m_MatrixCols - 3)
 			{
-				m_matrix[i][j] = 1 * pow(i, matPower);
+				m_Matrix[i][j] = 1 * pow(i, matPower);
 				matPower--;
 			}
-			else if (j == m_matrixCols - 2)
-				m_matrix[i][j] = 1;
-			else if (j == m_matrixCols - 1)
-				m_matrix[i][j] = m_outputSetN[i];
+			else if (j == m_MatrixCols - 2)
+				m_Matrix[i][j] = 1;
+			else if (j == m_MatrixCols - 1)
+				m_Matrix[i][j] = m_OutputSetN[i];
 			else
-				m_matrix[i][j] = i;
+				m_Matrix[i][j] = i;
 		}
 	}
-	startMatrixProcess(batchMode);
+
+	StartMatrixProcess();
 }
 
-void ProcessExprReverse::startMatrixProcess(const bool batchMode)
+void ProcessExprReverse::StartMatrixProcess()
 {
 	int rowsIgnored = 0;
 	std::vector<std::vector<int>> matrixCopy;
-	for (int k = 0; k < m_maxDegree; k++)
+
+	for (int k = 0; k < m_MaxDegree; k++)
 	{
-		matrixCopy = m_matrix;
-		for (int i = rowsIgnored; i < m_matrixRows; i++)
+		matrixCopy = m_Matrix;
+		for (int i = rowsIgnored; i < m_MatrixRows; i++)
 		{
 			if (i == rowsIgnored)
 				continue;
 
-			for (int j = 0; j < m_matrixCols; j++)
-				m_matrix[i][j] = matrixCopy[i][j] - matrixCopy[i - 1][j];
+			for (int j = 0; j < m_MatrixCols; j++)
+				m_Matrix[i][j] = matrixCopy[i][j] - matrixCopy[i - 1][j];
 		}
 		rowsIgnored++;
 	}
-	startCoefficientsHunt(batchMode);
+
+	StartCoefficientsHunt();
 }
 
-void ProcessExprReverse::startCoefficientsHunt(const bool batchMode)
+void ProcessExprReverse::StartCoefficientsHunt()
 {
-	m_finalCoeffs = new int[m_matrixRows] {0};
+	m_FinalCoeffs = new int[m_MatrixRows] {0};
 
 	int termToLook = 1;
-	m_finalCoeffs[0] = m_matrix[m_matrixRows - 1][m_matrixCols - 1] / m_matrix[m_matrixRows - 1][0];	//1st Coeff or 'a'
-	for (int i = m_matrixRows - 2; i >= 0; i--)
+	m_FinalCoeffs[0] = m_Matrix[m_MatrixRows - 1][m_MatrixCols - 1] / m_Matrix[m_MatrixRows - 1][0];	//1st Coeff or 'a'
+	for (int i = m_MatrixRows - 2; i >= 0; i--)
 	{
-		int toFind = m_matrix[i][termToLook];
+		int toFind = m_Matrix[i][termToLook];
 		for (int t = 0; t < termToLook; t++)
-			m_matrix[i][t] *= m_finalCoeffs[t];
-		for (int j = 0; j < m_matrixCols; j++)
+			m_Matrix[i][t] *= m_FinalCoeffs[t];
+		for (int j = 0; j < m_MatrixCols; j++)
 		{
-			if (j != m_matrixCols - 1 && j != termToLook)
-				m_matrix[i][j] *= -1;
+			if (j != m_MatrixCols - 1 && j != termToLook)
+				m_Matrix[i][j] *= -1;
 		}
 
-		int sum = m_matrix[i][m_matrixCols - 1];
+		int sum = m_Matrix[i][m_MatrixCols - 1];
 		for (int k = 0; k < termToLook; k++)
-			sum += m_matrix[i][k];
+			sum += m_Matrix[i][k];
 
-		m_finalCoeffs[termToLook] = sum / toFind;
+		m_FinalCoeffs[termToLook] = sum / toFind;
 		termToLook++;
-		if (i == 0 && termToLook == m_matrixCols - 2)
+		if (i == 0 && termToLook == m_MatrixCols - 2)
 		{
-			m_finalCoeffs[termToLook] = m_matrix[i][m_matrixCols - 1];
+			m_FinalCoeffs[termToLook] = m_Matrix[i][m_MatrixCols - 1];
 			break;
 		}
 	}
-	batchMode ? printDerivedExpressionBatch() : printDerivedExpression();
+	m_BatchProcessMode ? PrintDerivedExpressionBatch() : PrintDerivedExpression();
 }
 
-void ProcessExprReverse::printDerivedExpression()
+void ProcessExprReverse::PrintDerivedExpression()
 {
-	int power = m_maxDegree;
+	int power = m_MaxDegree;
 	std::cout << "\n\nDerived Expression: ";
 	Poly poly = Poly();
-	for (int i = 0; i < m_matrixRows; i++)
+	for (int i = 0; i < m_MatrixRows; i++)
 	{
-		Term term = Term(m_finalCoeffs[i], power, i == m_matrixRows - 1);
-		poly.addTerm(term);
+		Term term = Term(m_FinalCoeffs[i], power, i == m_MatrixRows - 1);
+		poly.AddTerm(term);
 		power--;
 	}
 	std::cout << poly;
 }
 
-void ProcessExprReverse::printDerivedExpressionBatch()
+void ProcessExprReverse::PrintDerivedExpressionBatch()
 {
-	int power = m_maxDegree;
-	for (int i = 0; i < m_matrixRows; i++)
+	int power = m_MaxDegree;
+	for (int i = 0; i < m_MatrixRows; i++)
 	{
-		if (m_finalCoeffs[i] > 0 && i != 0)
-			m_finalExpressionsStr += "+";
+		if (m_FinalCoeffs[i] > 0 && i != 0)
+			m_FinalExpressionsStr += "+";
 
-		if (m_finalCoeffs[i] != 0)
+		if (m_FinalCoeffs[i] != 0)
 		{
-			if (m_finalCoeffs[i] == 1)
-				m_finalExpressionsStr += (i == m_matrixRows - 1) ? "1" : "x";
-			else if(m_finalCoeffs[i] == -1 && i != m_matrixRows - 1)
-				m_finalExpressionsStr += "-x";
+			if (m_FinalCoeffs[i] == 1)
+				m_FinalExpressionsStr += (i == m_MatrixRows - 1) ? "1" : "x";
+			else if(m_FinalCoeffs[i] == -1 && i != m_MatrixRows - 1)
+				m_FinalExpressionsStr += "-x";
 			else
 			{
-				m_finalExpressionsStr += std::to_string(m_finalCoeffs[i]);
-				if (i != m_matrixRows - 1)
-					m_finalExpressionsStr += "x";
+				m_FinalExpressionsStr += std::to_string(m_FinalCoeffs[i]);
+				if (i != m_MatrixRows - 1)
+					m_FinalExpressionsStr += "x";
 			}
 		}
-		if (power > 1 && m_finalCoeffs[i] != 0)
-			m_finalExpressionsStr += "^" + std::to_string(power);
+		if (power > 1 && m_FinalCoeffs[i] != 0)
+			m_FinalExpressionsStr += "^" + std::to_string(power);
 		power--;
 	}
-	m_finalExpressionsStr += "\n";
+	m_FinalExpressionsStr += "\n";
 }
 
-void ProcessExprReverse::batchProcessAllSets()
+void ProcessExprReverse::BatchProcessAllSets()
 {
-	if (m_outputSetS.size() == 0) return;
+	if (m_OutputSetS.size() == 0) return;
 	
-	m_finalExpressionsStr.clear();
-	std::cout << "\n\nExpressions:\n";
-	for (size_t i = 0; i < m_outputSetS.size(); i++)
-		parseOutputSetString(m_outputSetS[i], true);
+	m_BatchProcessMode = true;
+	m_FinalExpressionsStr.clear();
 
-	std::cout << m_finalExpressionsStr << "\n";
+	std::cout << "\n\nExpressions:\n";
+	for (size_t i = 0; i < m_OutputSetS.size(); i++)
+		ParseOutputSetString(m_OutputSetS[i]);
+
+	std::cout << m_FinalExpressionsStr << "\n";
 
 	FileHandler fh = FileHandler();
-	fh.saveFile(m_finalExpressionsStr);
-}
+	fh.SaveFile(m_FinalExpressionsStr);
 
-void ProcessExprReverse::process()
-{
-	system("cls");
-	FileHandler fh = FileHandler(m_outputSetS);
-	printAllOutputSets();
-	switch (m_mode)
-	{
-		case 1:
-			askOutputIndex();
-			break;
-		case 2:
-			batchProcessAllSets();
-			break;
-		default:
-			return;
-	}
+	m_BatchProcessMode = false;
 }

@@ -6,16 +6,16 @@ FileHandler::FileHandler()
 
 FileHandler::FileHandler(std::vector<std::string>& outputSetStr)
 {
-	readOutputSetFile(outputSetStr);
+	ReadOutputSetFile(outputSetStr);
 }
 
 FileHandler::~FileHandler()
 {
 }
 
-void FileHandler::readOutputSetFile(std::vector<std::string>& outputSetStr)
+void FileHandler::ReadOutputSetFile(std::vector<std::string>& outputSetStr)
 {
-	std::ifstream fileReader(m_outputSetFilename, std::ios::in);
+	std::ifstream fileReader(m_OutputSetFilename, std::ios::in);
 	fileReader.exceptions(std::ifstream::badbit);
 	try
 	{
@@ -31,13 +31,13 @@ void FileHandler::readOutputSetFile(std::vector<std::string>& outputSetStr)
 		fileReader.close();
 	}
 	catch (std::ifstream::failure& e) {
-		std::cout << "\nException Occured: Failed reading file: " << m_outputSetFilename << "\nMessage: " << e.what();
+		std::cout << "\nException Occured: Failed reading file: " << m_OutputSetFilename << "\nMessage: " << e.what();
 	}
 }
 
-void FileHandler::saveFile(const std::vector<int>& outputSet)
+void FileHandler::SaveFile(const std::vector<int>& outputSet)
 {
-	std::ofstream fileWriter(m_outputSetFilename, std::ios::app);
+	std::ofstream fileWriter(m_OutputSetFilename, std::ios::app);
 	fileWriter.exceptions(std::ofstream::badbit | std::ofstream::failbit);
 	try
 	{
@@ -48,14 +48,14 @@ void FileHandler::saveFile(const std::vector<int>& outputSet)
 	}
 	catch (std::ofstream::failure& e)
 	{
-		std::cout << "\nException Occured: Failed writing to file: " << m_outputSetFilename << "\nMessage: " << e.what();
+		std::cout << "\nException Occured: Failed writing to file: " << m_OutputSetFilename << "\nMessage: " << e.what();
 	}
-	std::cout << "\nFile Saved: " << m_outputSetFilename;
+	std::cout << "\nFile Saved: " << m_OutputSetFilename;
 }
 
-void FileHandler::saveFile(const std::string& expressionStr)
+void FileHandler::SaveFile(const std::string& expressionStr)
 {
-	std::ofstream fileWriter(m_expressionFilename, std::ios::out);
+	std::ofstream fileWriter(m_ExpressionFilename, std::ios::out);
 	fileWriter.exceptions(std::ofstream::badbit | std::ofstream::failbit);
 	try
 	{
@@ -64,7 +64,7 @@ void FileHandler::saveFile(const std::string& expressionStr)
 	}
 	catch (std::ofstream::failure& e)
 	{
-		std::cout << "\nException Occured: Failed writing to file: " << m_expressionFilename << "\nMessage: " << e.what();
+		std::cout << "\nException Occured: Failed writing to file: " << m_ExpressionFilename << "\nMessage: " << e.what();
 	}
-	std::cout << "\nFile Saved: " << m_expressionFilename;
+	std::cout << "\nFile Saved: " << m_ExpressionFilename;
 }

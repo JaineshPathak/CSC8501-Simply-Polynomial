@@ -3,14 +3,14 @@
 
 namespace Utils
 {
-	static void printVector(const std::vector<int>& v)
+	static void PrintVector(const std::vector<int>& v)
 	{
 		std::cout << "\nSize: " << v.size() << "\n";
-		for (int i : v)
+		for (const int& i : v)
 			std::cout << i << " ";
 	}
 
-	static void printMatrixVector(std::vector<std::vector<int>>& matrix, const int rows, const int cols)
+	static void PrintMatrixVector(const std::vector<std::vector<int>>& matrix, const int& rows, const int& cols)
 	{
 		std::cout << "\n";
 		for (int i = 0; i < rows; i++)
@@ -22,14 +22,15 @@ namespace Utils
 		}
 	}
 
-	static void clearMatrixVector(std::vector<std::vector<int>>& matrix, const int rows)
+	static void ClearMatrixVector(std::vector<std::vector<int>>& matrix, const int& rows)
 	{
 		for (int i = 0; i < rows; i++)
 			matrix[i].clear();
+
 		matrix.clear();
 	}
 
-	static bool isVectorConstant(const std::vector<int>& v)
+	static bool IsVectorConstant(const std::vector<int>& v)
 	{
 		if (v.size() <= 0)
 			return false;
@@ -41,7 +42,7 @@ namespace Utils
 		return true;
 	}
 
-	static std::vector<int> getDifferentiateVector(const std::vector<int> v, const int n)
+	static std::vector<int> GetDifferentiateVector(const std::vector<int> v, const int n)
 	{
 		std::vector<int> deltaVect;
 		for (int i = 1; i < n; i++)
@@ -50,26 +51,26 @@ namespace Utils
 		return deltaVect;
 	}
 
-	static void morphMatrixVect(std::vector<std::vector<int>>& matrix, const int rows, const int cols)
+	static void MorphMatrixVect(std::vector<std::vector<int>>& matrix, const int& rows, const int& cols)
 	{
 		matrix.resize(rows);
 		for (int i = 0; i < rows; i++)
 			matrix[i].resize(cols);
 	}
 
-	static int factorial(int n)
+	static int Factorial(int n)
 	{
-		return (n > 1) ? n * factorial(n - 1) : 1;
+		return (n > 1) ? n * Factorial(n - 1) : 1;
 	}
 
-	static void printArray(int* arr, int n)
+	static void PrintArray(int* arr, int n)
 	{
 		std::cout << "\n";
 		for (int i = 0; i < n; i++)
 			std::cout << arr[i] << "\t";
 	}
 
-	static int getNumberFromString(const char** str)
+	static int GetNumberFromString(const char** str)
 	{
 		char* end;
 		int n = std::strtol(*str, &end, 10);
@@ -82,7 +83,7 @@ namespace Utils
 		return n;
 	}
 
-	static int getNumberFromString(const char** str, int& n)
+	static int GetNumberFromString(const char** str, int& n)
 	{
 		char* end;
 		n = std::strtol(*str, &end, 10);

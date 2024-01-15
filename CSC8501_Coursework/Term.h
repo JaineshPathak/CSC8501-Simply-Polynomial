@@ -5,38 +5,39 @@
 
 class Term
 {
-private:
-	int m_coeff;
-	int m_power;
-
-	bool m_coeffIsConstant;
-
 public:
-	Term() : m_coeff(1), m_power(1), m_coeffIsConstant(false)
+	Term() : m_Coeff(1), m_Power(1), m_CoeffIsConstant(false)
 	{
 	}
 
-	Term(int _c, int _p) : m_coeff(_c), m_power(_p), m_coeffIsConstant(false)
+	Term(int _c, int _p) : m_Coeff(_c), m_Power(_p), m_CoeffIsConstant(false)
 	{
 	}
 
-	Term(int _c, int _p, bool _coeffIsConstant) : m_coeff(_c), m_power(_p), m_coeffIsConstant(_coeffIsConstant)
+	Term(int _c, int _p, bool _coeffIsConstant) : m_Coeff(_c), m_Power(_p), m_CoeffIsConstant(_coeffIsConstant)
 	{
 	}
 
 	Term(const Term& term)
 	{
-		m_coeff = term.m_coeff;
-		m_power = term.m_power;
+		m_Coeff = term.m_Coeff;
+		m_Power = term.m_Power;
 
-		m_coeffIsConstant = term.m_coeffIsConstant;
+		m_CoeffIsConstant = term.m_CoeffIsConstant;
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const Term& T);
 
+private:
+	int m_Coeff;
+	int m_Power;
+
+	bool m_CoeffIsConstant;
+
 public:
-	int getCoeff() const;
-	int getPower() const;
-	bool isConstant() const;
-	int getCalculatedVal(const int _v) const;
+	int GetCalculatedVal(const int& _v);
+
+	int GetCoeff() const { return m_Coeff; }
+	int GetPower() const { return m_Power; }
+	bool IsConstant() const { return m_CoeffIsConstant; }
 };

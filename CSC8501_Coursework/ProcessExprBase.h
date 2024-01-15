@@ -5,5 +5,8 @@
 class ProcessExprBase
 {
 public:
-	virtual void process() = 0;
+	ProcessExprBase() {};
+	virtual ~ProcessExprBase() {};
+
+	virtual void Process() = 0;
 };

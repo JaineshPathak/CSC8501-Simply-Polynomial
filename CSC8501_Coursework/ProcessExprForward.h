@@ -6,24 +6,26 @@
 
 class ProcessExprForward : public ProcessExprBase
 {
-private:
-	struct m_strIndex;
-	std::vector<int> m_outputSet;
-
 public:
 	ProcessExprForward();
 	~ProcessExprForward();
 
 private:
-	void inputStringExpression(std::string& polyStr);
-	void inputRangeAndCalc(Poly& poly);
+	struct m_StrIndex;
 
-	void parsePoly(m_strIndex* strIndex, Poly& poly);
-	int checkSign(m_strIndex* strIndex);
-	int checkExponent(m_strIndex* strIndex, bool& coeffIsConstant);
+protected:
+	void InputStringExpression(std::string& polyStr);
+	void InputRangeAndCalc(Poly& poly);
 
-	void askSaveFile();
+	void ParsePoly(m_StrIndex* strIndex, Poly& poly);
+	int CheckSign(m_StrIndex* strIndex);
+	int CheckExponent(m_StrIndex* strIndex, bool& coeffIsConstant);
+
+	void AskSaveFile();
 
 public:
-	void process() override;
+	void Process() override;
+
+private:
+	std::vector<int> m_OutputSet;
 };

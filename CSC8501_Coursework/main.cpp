@@ -3,8 +3,9 @@
 int main()
 {
 	CmdInterface cmdInterface = CmdInterface();
-	while (cmdInterface.isRunning())
-		cmdInterface.update();
+
+	while (cmdInterface.IsRunning())
+		cmdInterface.Update();
 
 	return 0;
 }

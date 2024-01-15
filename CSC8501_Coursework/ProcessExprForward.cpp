@@ -1,20 +1,20 @@
 #include "ProcessExprForward.h"
 
-struct ProcessExprForward::m_strIndex
+struct ProcessExprForward::m_StrIndex
 {
 	const char* str;
 } strIndexer;
 
 ProcessExprForward::ProcessExprForward()
 {
-	process();
+	Process();
 }
 
 ProcessExprForward::~ProcessExprForward()
 {
 }
 
-void ProcessExprForward::inputStringExpression(std::string& polyStr)
+void ProcessExprForward::InputStringExpression(std::string& polyStr)
 {
 	std::cout << "Enter Algebraic Expression, for example: 5x^3 + 2x^2 - x + 3\n";
 	std::cout << "Enter the Expression: ";
@@ -24,37 +24,37 @@ void ProcessExprForward::inputStringExpression(std::string& polyStr)
 	polyStr.erase(remove_if(polyStr.begin(), polyStr.end(), isspace), polyStr.end());
 }
 
-void ProcessExprForward::inputRangeAndCalc(Poly& poly)
+void ProcessExprForward::InputRangeAndCalc(Poly& poly)
 {
 	int startNum = 0, finishNum = 0;
 	std::cout << "\nEnter First and Finish Number: ";
 	std::cin >> startNum >> finishNum;
 
-	poly.calculatePoly(startNum, finishNum, m_outputSet);
+	poly.CalculatePoly(startNum, finishNum, m_OutputSet);
 
 	std::cout << "\nOutput Set: ";
-	Utils::printVector(m_outputSet);
+	Utils::PrintVector(m_OutputSet);
 }
 
-void ProcessExprForward::parsePoly(m_strIndex* strIndex, Poly& poly)
+void ProcessExprForward::ParsePoly(m_StrIndex* strIndex, Poly& poly)
 {
 	while (*strIndex->str)
 	{
 		int coeff = 1, power = 1;
 		bool coeffIsConstant = false;
 
-		int sign = checkSign(strIndex);
-		Utils::getNumberFromString(&strIndex->str, coeff);
+		int sign = CheckSign(strIndex);
+		Utils::GetNumberFromString(&strIndex->str, coeff);
 		coeff *= sign;
 
-		power = checkExponent(strIndex, coeffIsConstant);
+		power = CheckExponent(strIndex, coeffIsConstant);
 		(power > Rules::MAX_DEGREE) ? throw std::invalid_argument(std::string("Invalid Exponent/Degree: " + std::to_string(power) + " in the term. Must be less or equal to " + std::to_string(Rules::MAX_DEGREE))) : void();
 
 		(!coeffIsConstant && std::abs(coeff) > Rules::MAX_COEFFICIENT) ? throw std::invalid_argument(std::string("Invalid Coefficient: " + std::to_string(coeff) + " in the term. Must be less or equal to ") + std::to_string(Rules::MAX_COEFFICIENT)) : void();
 		(coeffIsConstant && std::abs(coeff) > Rules::MAX_CONSTANT) ? throw std::invalid_argument(std::string("Invalid Constant: " + std::to_string(coeff) + " in the term. Must be less or equal to " + std::to_string(Rules::MAX_CONSTANT))) : void();
 
 		Term term = Term(coeff, power, coeffIsConstant);
-		poly.addTerm(term);
+		poly.AddTerm(term);
 
 		//If second constant is found then ignore
 		if (coeffIsConstant)
@@ -62,7 +62,7 @@ void ProcessExprForward::parsePoly(m_strIndex* strIndex, Poly& poly)
 	}
 }
 
-int ProcessExprForward::checkSign(m_strIndex* strIndex)
+int ProcessExprForward::CheckSign(m_StrIndex* strIndex)
 {
 	int sign = 1;
 	if (*strIndex->str == '-')
@@ -76,7 +76,7 @@ int ProcessExprForward::checkSign(m_strIndex* strIndex)
 	return sign;
 }
 
-int ProcessExprForward::checkExponent(m_strIndex* strIndex, bool& coeffIsConstant)
+int ProcessExprForward::CheckExponent(m_StrIndex* strIndex, bool& coeffIsConstant)
 {
 	int power = 0;
 	if (*strIndex->str == 'x' || *strIndex->str == 'X')
@@ -86,7 +86,7 @@ int ProcessExprForward::checkExponent(m_strIndex* strIndex, bool& coeffIsConstan
 		if (*strIndex->str == '^')
 		{
 			strIndex->str++;
-			Utils::getNumberFromString(&strIndex->str, power);
+			Utils::GetNumberFromString(&strIndex->str, power);
 		}
 	}
 	else
@@ -95,7 +95,7 @@ int ProcessExprForward::checkExponent(m_strIndex* strIndex, bool& coeffIsConstan
 	return power;
 }
 
-void ProcessExprForward::askSaveFile()
+void ProcessExprForward::AskSaveFile()
 {
 	std::cout << "\n\nSave the Output Set in a file? Enter Y/N\nYour Answer: ";
 	std::cin.ignore();
@@ -108,7 +108,7 @@ void ProcessExprForward::askSaveFile()
 		case 'Y':
 		{
 			FileHandler fh = FileHandler();
-			fh.saveFile(m_outputSet);
+			fh.SaveFile(m_OutputSet);
 			break;		
 		}
 
@@ -119,22 +119,22 @@ void ProcessExprForward::askSaveFile()
 	}
 }
 
-void ProcessExprForward::process()
+void ProcessExprForward::Process()
 {
 	system("cls");
 	std::string polyStr("");
-	inputStringExpression(polyStr);
+	InputStringExpression(polyStr);
 
 	Poly poly = Poly();
 	strIndexer.str = polyStr.c_str();
 
-	try { parsePoly(&strIndexer, poly); }
+	try { ParsePoly(&strIndexer, poly); }
 	catch (const std::invalid_argument& e)
 	{
 		std::cout << "\nException occured: " << e.what();
 		return;
 	}
 
-	inputRangeAndCalc(poly);
-	askSaveFile();
+	InputRangeAndCalc(poly);
+	AskSaveFile();
 }

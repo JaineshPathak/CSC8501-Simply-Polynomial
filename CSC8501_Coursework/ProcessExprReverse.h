@@ -5,36 +5,44 @@
 
 class ProcessExprReverse : public ProcessExprBase
 {
-private:
-	int m_mode = 0;		//1 - Single Expression, 2 - Batch Expression
-
-	std::vector<std::string> m_outputSetS;
-	std::vector<int> m_outputSetN;
-	std::vector<std::vector<int>> m_matrix;
-	int m_maxDegree;
-	int m_outputSetNSize;
-	int m_matrixRows, m_matrixCols;
-	int* m_finalCoeffs;
-
-	std::string m_finalExpressionsStr;
-
 public:
-	ProcessExprReverse() : m_mode(0) { process(); }
-	ProcessExprReverse(const int& _mode) : m_mode(_mode) { process(); }
+	ProcessExprReverse();
+	ProcessExprReverse(const int& _mode);
 	~ProcessExprReverse();
 
-private:
-	void printAllOutputSets();
-	void askOutputIndex();
-	void parseOutputSetString(const std::string& strSet, const bool batchMode = false);
-	void startDifferentiateProcess(const bool batchMode = false);
-	void prepareMatrixProcess(const bool batchMode = false);
-	void startMatrixProcess(const bool batchMode = false);
-	void startCoefficientsHunt(const bool batchMode = false);
-	void printDerivedExpression();
-	void printDerivedExpressionBatch();
-	void batchProcessAllSets();
-
 public:
-	void process() override;
+	virtual void Process() override;
+
+protected:
+	void PrintAllOutputSets();
+	void AskOutputIndex();
+
+	void ParseOutputSetString(const std::string& strSet);
+	void StartDifferentiateProcess();
+
+	void PrepareMatrixProcess();
+	void StartMatrixProcess();
+	
+	void StartCoefficientsHunt();
+	
+	void PrintDerivedExpression();
+	void PrintDerivedExpressionBatch();
+	
+	void BatchProcessAllSets();
+
+private:
+	int m_Mode = 0;		//1 - Single Expression, 2 - Batch Expression
+	bool m_BatchProcessMode;
+
+	std::vector<std::string> m_OutputSetS;
+	std::vector<int> m_OutputSetN;
+
+	std::vector<std::vector<int>> m_Matrix;
+	int m_MaxDegree;
+	int m_OutputSetNSize;
+	int m_MatrixRows, m_MatrixCols;
+	
+	int* m_FinalCoeffs;
+
+	std::string m_FinalExpressionsStr;
 };
