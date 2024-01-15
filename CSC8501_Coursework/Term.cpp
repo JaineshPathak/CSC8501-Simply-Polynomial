@@ -1,72 +1,33 @@
 #include "Term.h"
 
-int Term::getCoeff() { return m_coeff; }
-
-int Term::getPower() { return m_power; }
-
-int Term::getCalculatedVal(int _v)
-{
-	if (m_power < 0)
-		return 0;
-
-	return m_coeff * pow(_v, m_power);
-}
-
 std::ostream& operator<<(std::ostream& os, const Term& T)
 {
-	os << T.m_coeff << "x" << "^" << T.m_power;
+	//os << " ";
+	if (!T.m_CoeffIsConstant)
+	{
+		if (T.m_Coeff != 0)
+		{
+			if (T.m_Coeff == 1)
+				os << "x";
+			else if (T.m_Coeff == -1)
+				os << "-x";
+			else
+				os << T.m_Coeff << "x";
+		}
+
+		if (T.m_Power > 1 && T.m_Coeff != 0)
+			os << "^" << T.m_Power;
+		//os << T.m_coeff << "x" << "^" << T.m_power;
+	}
+	else if(T.m_CoeffIsConstant && T.m_Coeff != 0)
+		os << T.m_Coeff;
+
 	return os;
 }
 
-int Term::parseCoefficient(const char* str)
+int Term::GetCalculatedVal(const int& _v)
 {
-	int c = getNumberDigit(str);
-	int sign = getSign(str);
+	if (m_Power < 0) return 0;
 
-	return c * sign;
-}
-
-int Term::parseExponent(const char* str)
-{
-	int e = 1;
-
-	if (*str == 'x')
-	{
-		str++;
-		if (*str == '^')
-		{
-			str++;
-			e = getNumberDigit(str);
-		}
-	}
-
-	return e;
-}
-
-int Term::getSign(const char* str)
-{
-	int n = 1;
-
-	if (*str == '-')
-	{
-		n = -1;
-		str++;
-	}
-	else if (*str == '+')
-		str++;
-
-	return n;
-}
-
-int Term::getNumberDigit(const char* str)
-{
-	char* end;
-	int n = strtol(str, &end, 10);
-
-	if (str == end)
-		n = 1;
-
-	str = end;
-
-	return n;
+	return m_Coeff * (int)pow(_v, m_Power);
 }

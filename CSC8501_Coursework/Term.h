@@ -5,39 +5,39 @@
 
 class Term
 {
-private:
-	int m_coeff;
-	int m_power;
-
 public:
-	Term() : m_coeff(1), m_power(1)
+	Term() : m_Coeff(1), m_Power(1), m_CoeffIsConstant(false)
 	{
 	}
 
-	Term(int _c, int _p) : m_coeff(_c), m_power(_p)
+	Term(int _c, int _p) : m_Coeff(_c), m_Power(_p), m_CoeffIsConstant(false)
+	{
+	}
+
+	Term(int _c, int _p, bool _coeffIsConstant) : m_Coeff(_c), m_Power(_p), m_CoeffIsConstant(_coeffIsConstant)
 	{
 	}
 
 	Term(const Term& term)
 	{
-		m_coeff = term.m_coeff;
-		m_power = term.m_power;
+		m_Coeff = term.m_Coeff;
+		m_Power = term.m_Power;
+
+		m_CoeffIsConstant = term.m_CoeffIsConstant;
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const Term& T);
 
 private:
-	int parseCoefficient(const char* str);
-	int parseExponent(const char* str);
+	int m_Coeff;
+	int m_Power;
 
-	int getSign(const char* str);
-	int getNumberDigit(const char* str);
-
-public:
-	int getCoeff();
-	int getPower();
-	int getCalculatedVal(int _v);
+	bool m_CoeffIsConstant;
 
 public:
-	Term* nextTerm;
+	int GetCalculatedVal(const int& _v);
+
+	int GetCoeff() const { return m_Coeff; }
+	int GetPower() const { return m_Power; }
+	bool IsConstant() const { return m_CoeffIsConstant; }
 };
