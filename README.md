@@ -3,6 +3,9 @@ The task was to write a computer program in C++ that creates a sequence of numbe
 on algebraic expressions of one, two, three, and four terms (Monomial, Binomial, Trinomial, Quadrinomial), commonly termed polynomials. 
 Each algebraic expression is limited to the existence of a single variable (which can appear in multiple terms), a highest degree of 4, a highest coefficient of 9, highest constant is 1000, and restricted to the operators of + or - only between terms.
 
+# Download
+Please check the Releases section. To run simply click on executable file.
+
 Description:
 The project provides an interface with commands for performing different types:
 
